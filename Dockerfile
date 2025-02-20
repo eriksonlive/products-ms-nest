@@ -9,12 +9,15 @@
     
     # Instala todas las dependencias (incluyendo las de desarrollo)
     RUN npm install
-
-    # Ejecuta Prisma generate, si es necesario (esto generará el cliente de Prisma)
-    RUN npx prisma generate
     
     # Copia el resto del código fuente
     COPY . .
+    
+    # 🔹 Asegura que Prisma tenga acceso al esquema
+    COPY prisma ./prisma
+    
+    # Ejecuta Prisma generate para generar el cliente de Prisma
+    RUN npx prisma generate
     
     # Ejecuta el proceso de build (asegúrate de que en package.json tienes definido "build")
     RUN npm run build
@@ -29,12 +32,18 @@
     COPY package*.json ./
     RUN npm install --production
     
-    # Copia la carpeta "dist" generada en la etapa de build a la imagen final.
-    # Nota: Asegúrate de que el comando "npm run build" genera la carpeta "dist" en /app.
+    # Copia la carpeta "dist" generada en la etapa de build a la imagen final
     COPY --from=builder /app/dist ./dist
     
-    # Expone el puerto en el que corre la aplicación (ajusta según tu configuración, aquí se usa 3001)
+    # 🔹 Copia el cliente de Prisma generado en la etapa de construcción
+    COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+    
+    # 🔹 Copia la carpeta prisma para que esté disponible en producción
+    COPY --from=builder /app/prisma ./prisma
+    
+    # Expone el puerto en el que corre la aplicación
     EXPOSE 3001
     
-    # Comando para iniciar la aplicación; asegúrate de que en package.json el script "start" ejecute, por ejemplo, "node dist/main.js"
+    # Comando para iniciar la aplicación
     CMD ["node", "dist/main.js"]
+    
