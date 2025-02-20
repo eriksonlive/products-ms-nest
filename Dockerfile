@@ -37,4 +37,4 @@
     EXPOSE 3001
     
     # Comando para iniciar la aplicación; asegúrate de que en package.json el script "start" ejecute, por ejemplo, "node dist/main.js"
-    CMD ["npm", "start"]
+    CMD ["node", "dist/main.js"]
