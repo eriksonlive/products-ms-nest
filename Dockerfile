@@ -9,15 +9,15 @@
     
     # Instala todas las dependencias (incluyendo las de desarrollo)
     RUN npm install
+
+    # Ejecuta Prisma generate, si es necesario (esto generará el cliente de Prisma)
+    RUN npx prisma generate
     
     # Copia el resto del código fuente
     COPY . .
     
     # Ejecuta el proceso de build (asegúrate de que en package.json tienes definido "build")
     RUN npm run build
-    
-    # Ejecuta Prisma generate, si es necesario (esto generará el cliente de Prisma)
-    RUN npx prisma generate
     
     # -----------------------------
     # Etapa 2: Imagen de producción
