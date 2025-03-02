@@ -26,4 +26,22 @@ model Product {
   @@index([available])
 }
 
+model Comment {
+  id        Int      @id @default(autoincrement()) // ID único
+  name      String?
+  content   String // Contenido del comentario
+  user      Int
+  createdAt DateTime @default(now()) // Fecha de creación
+  updatedAt DateTime @updatedAt // Fecha de actualización
+}
 
+model MapData {
+  id          Int      @id @default(autoincrement()) // ID único
+  user        Int
+  name        String? // Nombre del área (opcional)
+  description String? // Descripción (opcional)
+  area        Float // Área en m² o km²
+  coordinates String // Guardar JSON como string
+  createdAt   DateTime @default(now()) // Fecha de creación
+  updatedAt   DateTime @updatedAt // Fecha de actualización
+}
